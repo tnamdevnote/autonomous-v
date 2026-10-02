@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800" font-family="Helvetica, Arial, sans-serif">
+<rect width="1280" height="800" fill="#0f141a"/>
+<rect x="0" y="0" width="780" height="800" fill="#141c24"/>
+<rect x="290" y="0" width="200" height="800" fill="#1b2530"/>
+<rect x="355" y="520" width="70" height="120" rx="14" fill="#f4f7fa"/>
+<rect x="378" y="300" width="24" height="220" fill="#2bd4c4" opacity="0.35"/>
+<text x="40" y="770" fill="#5d6b78" font-size="18">SAMPLE FIGMA EXPORT · replace with your frames (src/designs/sample-figma)</text>
+
+<rect x="820" y="60" width="420" height="560" rx="20" fill="#1d2833"/>
+<text x="850" y="120" fill="#fff" font-size="30" font-weight="700">Why we stopped</text>
+<text x="850" y="175" fill="#c9d3dc" font-size="22">A fire truck is parked next to</text>
+<text x="850" y="205" fill="#c9d3dc" font-size="22">our lane. To be safe, the car</text>
+<text x="850" y="235" fill="#c9d3dc" font-size="22">waits until it's sure the way</text>
+<text x="850" y="265" fill="#c9d3dc" font-size="22">around is clear.</text>
+<text x="850" y="330" fill="#c9d3dc" font-size="22">Our support team is checking.</text>
+<rect x="830" y="640" width="400" height="96" rx="48" fill="#26323e"/>
+<text x="1030" y="700" fill="#fff" font-size="30" text-anchor="middle">Back</text>
+</svg>

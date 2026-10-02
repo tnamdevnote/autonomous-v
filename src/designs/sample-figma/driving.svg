@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800" font-family="Helvetica, Arial, sans-serif">
+<rect width="1280" height="800" fill="#0f141a"/>
+<rect x="0" y="0" width="780" height="800" fill="#141c24"/>
+<rect x="290" y="0" width="200" height="800" fill="#1b2530"/>
+<rect x="355" y="520" width="70" height="120" rx="14" fill="#f4f7fa"/>
+<rect x="378" y="300" width="24" height="220" fill="#2bd4c4" opacity="0.35"/>
+<text x="40" y="770" fill="#5d6b78" font-size="18">SAMPLE FIGMA EXPORT · replace with your frames (src/designs/sample-figma)</text>
+
+<text x="830" y="110" fill="#8a97a5" font-size="24">Arriving</text>
+<text x="830" y="180" fill="#fff" font-size="64" font-weight="700">2:26 PM</text>
+<text x="830" y="230" fill="#d6dde4" font-size="28">Dr. Rivera's Office</text>
+<rect x="830" y="640" width="400" height="96" rx="48" fill="#26323e"/>
+<text x="1030" y="700" fill="#fff" font-size="30" text-anchor="middle">Help</text>
+</svg>
