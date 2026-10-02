@@ -28,8 +28,8 @@ function Lab() {
   useRiderKeys("lab");
   return (
     <div className="lab">
-      <Panel title="World (windshield)" to="/world" className="lab-world">
-        <WorldView />
+      <Panel title="In the car (back seat) · tap the centre screen" to="/world" className="lab-world">
+        <WorldView surface="lab" />
       </Panel>
       <Panel title="Cabin screen" to="/cabin" className="lab-cabin">
         <ScaledFrame {...CABIN_SIZE}>
@@ -87,9 +87,10 @@ function Participant({ surface, label, children }: { surface: string; label: str
 export function WorldRoute() {
   return (
     <SimFollower>
-      <Participant surface="world" label="Windshield view">
+      <Participant surface="world" label="In the car">
         <div className="fullscreen">
           <WorldView />
+          <Voice />
         </div>
       </Participant>
     </SimFollower>
@@ -104,7 +105,6 @@ export function CabinRoute() {
           <ScaledFrame {...CABIN_SIZE}>
             <CabinScreen />
           </ScaledFrame>
-          <Voice />
         </div>
       </Participant>
     </SimFollower>

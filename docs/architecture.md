@@ -27,6 +27,8 @@ interview, 2026-10-02). Change this file when a decision changes.
 | 10 | Automatic session log + facilitator markers, exported as CSV/JSON | Lines up "truck appeared at 0:24" with "participant tensed at 0:25" |
 | 11 | Variants differ only in what the screen/voice says; the car and world behave identically | Fair comparison between designs (`onlyFor` on scenario steps) |
 | 12 | The engine always provides detections; each variant decides whether to highlight them | Whether highlighting the truck reassures or alarms is itself worth testing |
+| 13 | `/world` is the view from the middle of the back seat, with the interior modelled on the Waymo I-Pace; the cabin screen sits live on the dashboard and opens as a modal when tapped | The participant sees what a rider sees; the screen is small from the back seat (as in the real car), so tapping it brings it up to read and use |
+| 14 | The dashboard screen is real HTML pinned onto the 3D screen with a CSS perspective transform (`pinToQuad.ts`), not a texture | The same variant component renders on the dashboard, in the modal and on a tablet; text stays crisp and React context/clicks work normally |
 
 ## How it fits together
 
@@ -49,6 +51,9 @@ interview, 2026-10-02). Change this file when a decision changes.
   server that forwards messages between clients. Screens don't change.
 - `src/engine/hooks.ts`: the screen API: `useSim()`, `useRiderAction()`, `getLive()`
   (smooth position for 3D, extrapolated between state updates).
+- `src/surfaces/world/Interior.tsx`: the cabin interior, the passenger camera (with a slight
+  nose-dip under braking and road shake), and the anchor the dashboard screen is pinned to.
+  Rider taps are logged with where they happened: `dashboard`, `dashboard (opened)`, `cabin`, `phone`.
 - `src/engine/world.ts`: road geometry plus deterministic background traffic and parked
   cars, computed from time and position on every screen (never sent over the wire).
 - The host's clock runs in a web worker so the simulation keeps going when `/control` is a

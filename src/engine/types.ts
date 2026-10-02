@@ -164,6 +164,8 @@ export type RiderAction = "pressHelp" | "pressPullOver";
 
 export type Intent =
   | { kind: "rider"; action: RiderAction; surface?: string }
+  /** Anything else the rider does on a screen (opening it, switching tabs…). Logged only. */
+  | { kind: "rider"; action: "interaction"; detail: string; surface?: string }
   | { kind: "facilitator"; action: "start" | "pause" | "resume" | "end" | "skipNext" | "clearToProceed" }
   | { kind: "facilitator"; action: "reset" }
   | { kind: "facilitator"; action: "load"; scenarioId: string; variantId: string }

@@ -1,8 +1,9 @@
-// The view out of the windshield, from the rear seat. A stylized street that reacts to
-// the simulation: the car stops, waits and eases around objects as the engine says.
+// The view from the back seat: the car's interior with a live centre screen, and a
+// stylized street outside that reacts to the simulation (the car stops, waits and
+// eases around objects as the engine says). Tap the centre screen to open it.
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useLayoutEffect, useMemo, useRef } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import {
   getLive,
@@ -11,25 +12,59 @@ import {
   ROAD_LEFT_EDGE,
   ROAD_RIGHT_EDGE,
   trafficAt,
+  useSend,
   useSim,
   type BackgroundCar,
 } from "../../engine";
+import { CabinScreen } from "../cabin/CabinScreen";
+import { CabinDisplayProvider } from "../cabin/display";
+import { BASE_FOV, Interior } from "./Interior";
 import { ObjectModel } from "./models";
+import { ScreenModal } from "./ScreenModal";
 
 const SKY = "#c7d9ea";
 
-export function WorldView() {
+export function WorldView({ surface = "world" }: { surface?: string }) {
+  const [screenOpen, setScreenOpen] = useState(false);
+  const screenEl = useRef<HTMLDivElement>(null);
+  const send = useSend();
+  const openScreen = useCallback(() => {
+    setScreenOpen(true);
+    send({ kind: "rider", action: "interaction", detail: "opened centre screen", surface });
+  }, [send, surface]);
+  const closeScreen = useCallback(() => {
+    setScreenOpen(false);
+    send({ kind: "rider", action: "interaction", detail: "closed centre screen", surface });
+  }, [send, surface]);
+
   return (
-    <Canvas resize={{ offsetSize: true }} dpr={[1, 1.75]} camera={{ fov: 72, near: 0.05, far: 900 }}>
-      <color attach="background" args={[SKY]} />
-      <fog attach="fog" args={[SKY, 80, 480]} />
-      <hemisphereLight args={["#f3f7ff", "#7d7a6c", 1.1]} />
-      <directionalLight position={[40, 80, 30]} intensity={1.7} />
-      <Street />
-      <ScenarioObjects />
-      <Traffic />
-      <EgoRig />
-    </Canvas>
+    <div className="world-view">
+      <Canvas resize={{ offsetSize: true }} dpr={[1, 1.75]} camera={{ fov: BASE_FOV, near: 0.03, far: 900 }}>
+        <color attach="background" args={[SKY]} />
+        <fog attach="fog" args={[SKY, 80, 480]} />
+        <hemisphereLight args={["#f3f7ff", "#7d7a6c", 1.1]} />
+        <directionalLight position={[40, 80, 30]} intensity={1.7} />
+        <Street />
+        <ScenarioObjects />
+        <Traffic />
+        <Interior screenEl={screenEl} />
+      </Canvas>
+      {/* The centre screen: the selected cabin design, pinned onto the dashboard in 3D. */}
+      <div
+        ref={screenEl}
+        className="dash-screen"
+        role="button"
+        tabIndex={0}
+        aria-label="Open the car's screen"
+        onClick={openScreen}
+        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && openScreen()}
+      >
+        <CabinDisplayProvider value={{ surface: "dashboard", quality: "low" }}>
+          <CabinScreen />
+        </CabinDisplayProvider>
+      </div>
+      {screenOpen && <ScreenModal onClose={closeScreen} />}
+    </div>
   );
 }
 
@@ -230,44 +265,6 @@ function ScenarioObjects() {
           <ObjectModel kind={o.kind} />
         </group>
       ))}
-    </group>
-  );
-}
-
-/**
- * Camera in the front passenger seat, with the dashboard, windshield frame and an
- * empty driver's seat with a steering wheel nobody is holding.
- */
-function EgoRig() {
-  const cabin = useRef<THREE.Group>(null);
-  useFrame(({ camera }) => {
-    const live = getLive();
-    if (!live) return;
-    cabin.current!.position.set(live.x, 0, -live.s);
-    camera.position.set(live.x + 0.42, 1.2, -live.s - 0.3);
-    camera.lookAt(live.x + 0.2, 0.9, -live.s - 30);
-  });
-  const trim = "#25282c";
-  return (
-    <group ref={cabin}>
-      <mesh position={[0, 0.82, -1.25]}>
-        <boxGeometry args={[1.75, 0.26, 0.6]} />
-        <meshStandardMaterial color="#1b1d20" />
-      </mesh>
-      <mesh position={[-0.42, 1.0, -0.92]} rotation={[-1.15, 0, 0]}>
-        <torusGeometry args={[0.19, 0.025, 10, 32]} />
-        <meshStandardMaterial color="#121315" />
-      </mesh>
-      {[-0.84, 0.84].map((x) => (
-        <mesh key={x} position={[x, 1.25, -1.05]} rotation={[-0.55, 0, 0]}>
-          <boxGeometry args={[0.07, 0.75, 0.07]} />
-          <meshStandardMaterial color={trim} />
-        </mesh>
-      ))}
-      <mesh position={[0, 1.58, -0.8]}>
-        <boxGeometry args={[1.75, 0.06, 0.2]} />
-        <meshStandardMaterial color={trim} />
-      </mesh>
     </group>
   );
 }

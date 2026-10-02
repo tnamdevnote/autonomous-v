@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { checkCondition, useRiderAction, useSim, type Condition, type RiderAction } from "../../engine";
+import { useCabinDisplay } from "./display";
 
 export interface Hotspot {
   /** Position and size in frame pixels (read them off Figma's inspect panel). */
@@ -38,7 +39,7 @@ export function defineDesign(design: Design): Design {
 }
 
 function HotspotButton({ spot, onGo }: { spot: Hotspot; onGo: (frame: string) => void }) {
-  const fire = useRiderAction(spot.action ?? "pressHelp", "cabin (figma)");
+  const fire = useRiderAction(spot.action ?? "pressHelp", `${useCabinDisplay().surface} (figma)`);
   return (
     <button
       className="hotspot"

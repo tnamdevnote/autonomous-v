@@ -89,6 +89,72 @@ button {
   transform-origin: center;
 }
 
+/* --------------------------------------------------------- In-car view */
+
+.world-view {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  container-type: size;
+}
+
+/* The centre screen on the dashboard (a 1280×800 design scaled into 3D) */
+.dash-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  width: 1280px;
+  height: 800px;
+  border-radius: 28px;
+  overflow: hidden;
+  background: #000;
+  transform-origin: 0 0;
+  visibility: hidden;
+  cursor: pointer;
+}
+
+.dash-screen > * {
+  pointer-events: none;
+}
+
+.dash-screen:hover {
+  outline: 24px solid rgba(43, 212, 196, 0.55);
+}
+
+.screen-modal {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  background: rgba(5, 8, 12, 0.55);
+  backdrop-filter: blur(3px);
+}
+
+.screen-modal-panel {
+  position: relative;
+  width: min(92cqw, 88cqh * 1.6);
+  aspect-ratio: 16 / 10;
+  border-radius: 2.2cqh;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.screen-modal-close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  font-size: 22px;
+  line-height: 1;
+  color: #fff;
+  background: #2b333c;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
 /* ---------------------------------------------------------------- Lab (/) */
 
 .lab {
@@ -327,7 +393,18 @@ button {
   color: var(--cabin-muted);
 }
 
+.carviz {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 .viz-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  pointer-events: none;
   padding: 6px 12px;
   border-radius: 10px;
   white-space: nowrap;

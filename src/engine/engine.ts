@@ -88,6 +88,10 @@ export class SimEngine {
 
   handle(intent: Intent): void {
     const s = this.state;
+    if (intent.kind === "rider" && intent.action === "interaction") {
+      this.record("rider", "interaction", intent.surface ? `${intent.detail} (${intent.surface})` : intent.detail);
+      return;
+    }
     if (intent.kind === "rider") {
       this.record("rider", intent.action, intent.surface);
       if (intent.action === "pressHelp") {

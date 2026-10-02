@@ -1,9 +1,8 @@
 // "What the car sees": a Waymo-style 3D view for the cabin screen. Variants choose
 // what to emphasise with props; the engine always provides every detection.
 
-import { Html } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, type RefObject } from "react";
 import * as THREE from "three";
 import {
   detectionsAt,
@@ -17,6 +16,7 @@ import {
   useSimStore,
   type Detection,
 } from "../../../engine";
+import { useCabinDisplay } from "../display";
 
 export interface CarVizProps {
   /** Colour and label the object the car is stopped (or stopping) for. */
@@ -28,14 +28,20 @@ export interface CarVizProps {
 }
 
 export function CarViz(props: CarVizProps) {
+  const { quality } = useCabinDisplay();
+  const label = useRef<HTMLDivElement>(null);
   return (
-    <Canvas resize={{ offsetSize: true }} dpr={[1, 2]} camera={{ fov: 42, position: [0, 12, 14] }}>
-      <color attach="background" args={["#0d1218"]} />
-      <fog attach="fog" args={["#0d1218", 40, 120]} />
-      <ambientLight intensity={0.7} />
-      <directionalLight position={[10, 30, 10]} intensity={1.2} />
-      <VizScene {...props} />
-    </Canvas>
+    <div className="carviz">
+      <Canvas resize={{ offsetSize: true }} dpr={quality === "low" ? 0.5 : [1, 2]} camera={{ fov: 42, position: [0, 12, 14] }}>
+        <color attach="background" args={["#0d1218"]} />
+        <fog attach="fog" args={["#0d1218", 40, 120]} />
+        <ambientLight intensity={0.7} />
+        <directionalLight position={[10, 30, 10]} intensity={1.2} />
+        <VizScene {...props} label={label} />
+      </Canvas>
+      {/* Label for the highlighted object; positioned over it each frame. */}
+      <div ref={label} className="viz-label" />
+    </div>
   );
 }
 
@@ -44,20 +50,25 @@ const LINE_COLOR = "#33414f";
 const PATH_COLOR = "#2bd4c4";
 const HIGHLIGHT = "#ff8a3d";
 
-function VizScene({ highlightStopTarget, showPath, showStopLine }: CarVizProps) {
+function VizScene({ highlightStopTarget, showPath, showStopLine, label }: CarVizProps & { label: RefObject<HTMLDivElement | null> }) {
   const state = useSim();
   const ego = useRef<THREE.Group>(null);
   const path = useRef<THREE.Mesh>(null);
   const stopLine = useRef<THREE.Mesh>(null);
   const route = state.trip.routeMeters;
   const target = highlightStopTarget ? (state.car.stopTarget ?? (state.car.mode === "passing" ? state.car.passTarget : null)) : null;
+  const labelPos = useMemo(() => new THREE.Vector3(), []);
+  const placed = useRef(false);
 
-  useFrame(({ camera }) => {
+  useFrame(({ camera, size }) => {
     const live = getLive();
     const sim = useSimStore.getState().state;
     if (!live || !sim) return;
     ego.current!.position.set(live.x, 0, -live.s);
-    camera.position.lerp(new THREE.Vector3(live.x * 0.5, 13, -live.s + 15), 0.2);
+    // Ease the camera after the car; jump straight there on the first frame.
+    const follow = new THREE.Vector3(live.x * 0.5, 13, -live.s + 15);
+    camera.position.lerp(follow, placed.current ? 0.2 : 1);
+    placed.current = true;
     camera.lookAt(live.x * 0.5, 0, -live.s - 16);
 
     // Path from the car to where it plans to stop (or 60 m ahead).
@@ -71,6 +82,19 @@ function VizScene({ highlightStopTarget, showPath, showStopLine }: CarVizProps) 
     if (stopLine.current) {
       stopLine.current.visible = sim.car.stopTarget !== null;
       stopLine.current.position.set(0, 0.03, -(stopPoint(sim) + EGO_SIZE.length / 2 + 0.6));
+    }
+
+    const el = label.current;
+    const obj = target ? sim.objects.find((o) => o.id === target) : undefined;
+    if (el) {
+      if (obj?.label) {
+        labelPos.set(obj.x, obj.height + 1.2, -obj.s).project(camera);
+        el.textContent = obj.label;
+        el.style.display = "block";
+        el.style.transform = `translate(${((labelPos.x + 1) / 2) * size.width}px, ${((1 - labelPos.y) / 2) * size.height}px) translate(-50%, -100%)`;
+      } else {
+        el.style.display = "none";
+      }
     }
   });
 
@@ -138,11 +162,6 @@ function DetectionBox({ d, highlight }: { d: Detection; highlight: boolean }) {
         <boxGeometry args={[d.width, d.height, d.length]} />
         <meshStandardMaterial color={color} transparent opacity={highlight ? 0.9 : 0.55} />
       </mesh>
-      {highlight && d.label && (
-        <Html position={[0, d.height / 2 + 1.2, 0]} center zIndexRange={[10, 0]}>
-          <div className="viz-label">{d.label}</div>
-        </Html>
-      )}
     </group>
   );
 }

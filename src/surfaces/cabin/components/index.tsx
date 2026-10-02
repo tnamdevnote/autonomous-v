@@ -14,9 +14,11 @@ import {
   useSim,
   type RiderAction,
 } from "../../../engine";
+import { useCabinDisplay } from "../display";
 
 export { CarViz, type CarVizProps } from "./CarViz";
 export { useSim, useRiderAction } from "../../../engine";
+export { useCabinDisplay } from "../display";
 
 export function TripInfo({ showDelay = false }: { showDelay?: boolean }) {
   const sim = useSim();
@@ -58,7 +60,7 @@ export function RiderButton({
   kind?: "primary" | "secondary" | "quiet";
   children: ReactNode;
 }) {
-  const press = useRiderAction(action, "cabin");
+  const press = useRiderAction(action, useCabinDisplay().surface);
   return (
     <button className={`rider-button ${kind}`} onClick={press}>
       {children}

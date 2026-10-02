@@ -136,4 +136,11 @@ describe("parked fire truck", () => {
     expect(types).toContain("rider:pressPullOver");
     expect(engine.log.find((e) => e.type === "marker")?.detail).toBe("anxiety: 5");
   });
+
+  it("logs screen interactions without triggering scenario events", () => {
+    const engine = start();
+    engine.handle({ kind: "rider", action: "interaction", detail: "open screen", surface: "dashboard" });
+    expect(engine.log.at(-1)).toMatchObject({ source: "rider", type: "interaction", detail: "open screen (dashboard)" });
+    expect(events(engine)).toEqual(["start"]);
+  });
 });
