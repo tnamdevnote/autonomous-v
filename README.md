@@ -56,6 +56,7 @@ clearance, or `maxWaitSeconds` passes. Then it eases around the truck and contin
 | Make a new scenario | copy a file in `src/scenarios/` | Appears in the Scenario menu on `/control`. Reference: `docs/scenarios.md` |
 | Change a cabin screen's layout or features | `src/surfaces/cabin/variants/*.tsx` | React. Read state with `useSim()`, send actions with `useRiderAction()` |
 | Add a cabin design to compare | copy a file in `src/surfaces/cabin/variants/` | Appears in the Cabin design menu automatically |
+| Try a third Troubleshoot option | `TBD_CANDIDATES` in `src/surfaces/cabin/variants/troubleshoot.tsx` | Pick one per window with `?tbd=why` (or `exit`, `reroute`, `message`, `notify`, `all`), e.g. `/world?tbd=why` |
 | Test a Figma frame | `src/designs/<name>/design.ts` + exported images | See `src/designs/sample-figma/design.ts`. Add `?hotspots` to the URL to see hotspots |
 | Change the phone app | `src/surfaces/phone/PhoneApp.tsx` | |
 | Add a new *kind* of event (a swerve, a pedestrian…) | `src/engine/` + `src/surfaces/world/` | Needs code |
