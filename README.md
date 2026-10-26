@@ -22,6 +22,7 @@ npm install
 npm run dev        # http://localhost:5173
 npm test           # engine + scenario checks
 npm run build      # production build (deploys as-is to Vercel)
+npm run build:demo # one-page click-around demo of the Troubleshoot screen → dist-demo/
 ```
 
 ## Screens (routes)

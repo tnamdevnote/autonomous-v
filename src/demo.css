@@ -1,0 +1,144 @@
+/* One-page demo (demo.html). A single dark look to match the cabin screen. */
+
+:root {
+  color-scheme: dark;
+  --demo-bg: #07090c;
+  --demo-panel: #11161c;
+  --demo-line: #232c36;
+  --demo-text: #e9edf1;
+  --demo-muted: #8a97a5;
+  --demo-accent: #2bd4c4;
+  --demo-warn: #ff8a3d;
+}
+
+body {
+  color: var(--demo-text);
+  background: var(--demo-bg);
+}
+
+.demo {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+  padding-block: 16px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+.demo-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 16px;
+}
+
+.demo-head h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 650;
+}
+
+.demo-head p {
+  margin: 0;
+  min-width: 0;
+  font-size: 14px;
+  color: var(--demo-muted);
+}
+
+.demo-head b {
+  color: var(--demo-text);
+}
+
+.demo-screen {
+  flex: 1;
+  min-height: 220px;
+}
+
+.demo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  padding: 14px 18px;
+  border: 1px solid var(--demo-line);
+  border-radius: 14px;
+  background: var(--demo-panel);
+}
+
+.demo-controls section {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.demo-controls h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--demo-muted);
+}
+
+.demo-muted {
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.demo-pill {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--demo-accent);
+  background: color-mix(in srgb, var(--demo-accent) 14%, transparent);
+}
+
+.demo-pill.warn {
+  color: var(--demo-warn);
+  background: color-mix(in srgb, var(--demo-warn) 14%, transparent);
+}
+
+.demo-row,
+.demo-seg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.demo-controls button {
+  padding: 7px 12px;
+  border: 1px solid var(--demo-line);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--demo-text);
+  background: transparent;
+}
+
+.demo-controls button:hover:not(:disabled) {
+  border-color: var(--demo-muted);
+}
+
+.demo-controls button:focus-visible {
+  outline: 2px solid var(--demo-accent);
+  outline-offset: 2px;
+}
+
+.demo-controls button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.demo-seg button.on {
+  border-color: var(--demo-accent);
+  color: var(--demo-accent);
+}
+
+.demo-screen .cabin-screen {
+  box-shadow: 0 0 0 1px var(--demo-line), 0 20px 60px rgba(0, 0, 0, 0.6);
+}
